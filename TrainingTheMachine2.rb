@@ -4,7 +4,7 @@ require './rand_generator'
 
 
 
-#
+# 
 #
 #
 #
@@ -18,58 +18,65 @@ require './rand_generator'
 dbf = './db/ManOrWomanDB.db'
 db = YAML.load(File.read(dbf))
 
-n = 0.05#Constante da taxa de Aprendizado
+n = 0.023#Constante da taxa de Aprendizado
 
 todas_amostras = db
 
 epoca = 0
 
-erro = true
+erro = false
 vetores_w = []
 vetor_w = randg 3
-while erro
+arr_De_zeros = [0]
+arr_de_arrs = []
+while arr_De_zeros.include? 0 # Enquanto ele conter zeros(erros) ele irá treinar!
     ponder = []
-    tmp = 0
-    
+    arr_De_zeros = []
     for vetor in todas_amostras do
-        next if vetor[3] == vetor[tmp] 
+        
+        #Pondera
+        tmp = 0
+        for x in vetor 
+            next if x.object_id == vetor.last.object_id
+            ponder[tmp] = vetor_w[tmp] * x
+            
+            tmp += 1
+        end
         #Guarda o vetor
         vetores_w << vetor_w
         
-        ponder[tmp] = vetor_w[tmp] * vetor[tmp]
-        tmp += 1
         u = 0
-        ponder.each { |vector|
-            u += vector
+        ponder.each { |wx|
+            u += wx
         }
+        puts "The u value: #{u} :"
         (u >= 0)? y = 1 : y = -1
         
-        puts "Acho que é #{y} e é #{vetor[3]}"
-        if y != vetor[3] # Se é 1 ou -1
-            tmp = 0
+        puts "Acho que é #{y} e é #{vetor.last}"
+        if y != vetor.last # Se é 1 ou -1
             arrn = []
+            tmp = 0
             while tmp < (vetor.length - 1)
-                arrn << vetor_w[tmp] + (n * (vetor[3] - y) * vetor[tmp]) 
+                arrn << vetor_w[tmp] + (n * (vetor.last - y) * vetor[tmp]) 
                 tmp += 1
             end
             vetor_w = arrn
             puts 'Errei'
-            erro = true
+            arr_De_zeros << 0
         else
+            arr_De_zeros << 1
             puts "Acertei"
-            erro = false
         end
         
-        
-        
+        arr_de_arrs << arr_De_zeros
     end
-
     epoca += 1
 end
 
 puts "Vetor final foi o " + vetor_w.to_s
 puts "Treinou #{epoca} vezes"
-
+puts "Arr_de_zeros: #{arr_de_arrs.to_s }"
+puts "Ultimo arr_de_zeros: #{arr_de_arrs.last}"
 
 File.open('./db/bestVectors.db', 'w'){|f|
     f.puts YAML.dump(vetor_w)

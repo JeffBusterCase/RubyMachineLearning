@@ -10,5 +10,5 @@ cabelo da mulher += 0.4
 
 nivel de caspas no cabelo:
     homem += 0.6
-    mulher -= 0.4
+    mulher -= 0.3
 

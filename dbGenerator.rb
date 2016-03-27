@@ -10,10 +10,10 @@ require 'yaml'
 
 def generate_hOm quantos
     
-    cabeloH = 0.4 #-=
-    caspasH = 0.4 #+=
+    cabeloH = 0.3 #-=
+    caspasH = 0.6 #+=
     cabeloM = 0.4 #+=
-    caspasM = 0.4 #-=
+    caspasM = 0.3 #-=
     
     arrayHomem = []
 
@@ -67,7 +67,7 @@ def generate_hOm quantos
     return arr
 end
 arr = []
-numoftimes = 500
+numoftimes = 20
 while numoftimes >= 0
     arr << generate_hOm(2)[0]
     numoftimes -= 1
